@@ -8,15 +8,18 @@ import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import { AuthContext } from '../context/AuthContext.jsx';
 import RestService from '../services/RestService.js';
 import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
+  const userInfo = JSON.parse(localStorage.getItem('loginData'));
+  console.log(userInfo);
+
   let navigate = useNavigate();
-  const { loginData, setSigned } = useContext(AuthContext);
+  const { setSigned } = useContext(AuthContext);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
   const handleOpenUserMenu = (event) => {
@@ -34,14 +37,17 @@ const Header = () => {
   const getUsersHandle = () => {};
 
   const logoutHandle = async () => {
-    const getObras = await RestService.GET(
-      `/auth/logout`,
-      loginData.access_token
-    );
+    const logout = await RestService.GET(`/auth/logout`, userInfo.access_token);
     setSigned(false);
     localStorage.clear();
-    getObras && navigate('/');
+    logout && navigate('/');
   };
+
+  useEffect(() => {
+    if (!userInfo) {
+      navigate('/');
+    }
+  }, [userInfo, navigate]);
 
   const settings = [
     ['Home', goHomeHandle],
@@ -49,7 +55,8 @@ const Header = () => {
     ['Usuários', getUsersHandle],
     ['Sair', logoutHandle],
   ];
-  return loginData ? (
+
+  return userInfo ? (
     <AppBar position="static" sx={{ mb: 10 }}>
       <Container maxWidth="xl">
         <Toolbar
@@ -61,7 +68,7 @@ const Header = () => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Menu">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt={loginData.user.name} src={loginData.user.Photo} />
+                <Avatar alt={userInfo.user.name} src={userInfo.user.Photo} />
               </IconButton>
             </Tooltip>
             <Menu

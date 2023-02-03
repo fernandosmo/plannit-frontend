@@ -1,4 +1,4 @@
-const inputs = [
+const inputsObra = [
   {
     name: 'Empreendimento',
     type: 'text',
@@ -41,4 +41,25 @@ const inputs = [
   { name: 'Gestor', type: 'text', label: 'Gestor', placeholder: 'Paulo' },
 ];
 
-export default inputs;
+const inputsAtividade = [
+  {
+    name: 'nome',
+    type: 'text',
+    label: 'Atividade',
+    placeholder: 'Corte de ruas',
+  },
+  {
+    name: 'ordem',
+    type: 'number',
+    label: 'Ordem de execução',
+    placeholder: '1',
+  },
+  {
+    name: 'unidade',
+    type: 'text',
+    label: 'Unidade de medida',
+    placeholder: 'm²',
+  },
+];
+
+export { inputsObra, inputsAtividade };

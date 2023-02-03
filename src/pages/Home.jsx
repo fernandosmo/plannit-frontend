@@ -15,35 +15,46 @@ import { AuthContext } from '../context/AuthContext.jsx';
 import NewWork from '../components/NewWork.jsx';
 
 const Home = () => {
+  const userInfo = JSON.parse(localStorage.getItem('loginData'));
   let navigate = useNavigate();
-  const { loginData, obras, setObras } = useContext(AuthContext);
+  const { obras, setObras } = useContext(AuthContext);
+  console.log('obras', obras);
 
   useEffect(() => {
     async function fetchData() {
       try {
         const getObras = await RestService.GET(
           `/obra/show-all`,
-          loginData.access_token
+          userInfo.access_token
         );
+        console.log(getObras.status);
         getObras.status === 'success' && setObras(getObras.data.obras);
       } catch (error) {
-        navigate('/');
+        console.log(error);
       }
     }
     fetchData();
-  }, [loginData, setObras, navigate]);
+  }, [userInfo.access_token, setObras, navigate]);
+
+  useEffect(() => {
+    if (!userInfo) {
+      navigate('/');
+    }
+  }, [userInfo, navigate]);
 
   const [newObraList, setNewObraList] = useState(obras);
+  console.log(obras);
+  console.log(newObraList);
 
-  const childToParent = (childdata) => {
-    setNewObraList([...newObraList, childdata]);
+  const newObraHandle = (newObra) => {
+    setNewObraList([...obras, newObra]);
   };
 
   return (
     <>
       <Header />
       <Container maxWidth="sm">
-        <NewWork childToParent={childToParent} />
+        <NewWork newObraHandle={newObraHandle} />
         {newObraList[0] ? (
           newObraList.map((obra) => (
             <Card

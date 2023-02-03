@@ -1,7 +1,4 @@
 import { Grid, TextField } from '@mui/material';
-import dayjs from 'dayjs';
-
-const currentDate = dayjs().format('YYYY-MM-DD');
 
 const ModalNewWorkBody = (props) => {
   if (props.type === 'date') {
@@ -12,7 +9,7 @@ const ModalNewWorkBody = (props) => {
           name={props.name}
           label={props.label}
           type="date"
-          defaultValue={currentDate}
+          defaultValue={props.currentDate}
           onChange={props.handleOnChange}
           sx={{ width: 220 }}
           InputLabelProps={{

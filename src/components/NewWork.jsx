@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import {
   Button,
   Dialog,
@@ -5,17 +6,11 @@ import {
   DialogContent,
   DialogTitle,
 } from '@mui/material';
-import { useContext, useEffect, useRef, useState } from 'react';
-import { AuthContext } from '../context/AuthContext';
-import RestService from '../services/RestService';
-import ModalNewWorkBody from './ModalNewWorkBody';
-import inputs from '../utils/inputsList.js';
+import EtapaAccordion from './accordions/EtapaAccordion';
+import ObraAccordion from './accordions/ObraAccordion';
+import AtividadeAccordion from './accordions/AtividadeAccordion';
 
-export default function NewWork({ childToParent }) {
-  const { loginData } = useContext(AuthContext);
-  console.log(loginData);
-  const [obra, setObra] = useState(loginData && { user: loginData.user.id });
-
+export default function NewWork({ newObraHandle }) {
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
@@ -24,10 +19,23 @@ export default function NewWork({ childToParent }) {
   const handleClose = () => {
     setOpen(false);
   };
-  const handleSaveObra = () => {
-    childToParent(obra);
-    RestService.POST('/obra/register', obra);
-    handleClose();
+
+  const [obraDisabled, setObraDisabled] = useState(false);
+
+  const handleObraDisable = (obraDisable) => {
+    setObraDisabled(obraDisable);
+  };
+
+  const [etapaDisabled, setEtapaDisabled] = useState(true);
+
+  const handleEtapaDisable = (etapaDisable) => {
+    setEtapaDisabled(etapaDisable);
+  };
+
+  const [atividadeDisabled, setAtividadeDisabled] = useState(true);
+
+  const handleAtividadeDisable = (atividadeDisable) => {
+    setAtividadeDisabled(atividadeDisable);
   };
 
   const descriptionElementRef = useRef(null);
@@ -40,13 +48,6 @@ export default function NewWork({ childToParent }) {
       }
     }
   }, [open]);
-
-  const handleChange = (e) => {
-    e.preventDefault();
-    e.target.name === 'Prazo_Exec'
-      ? setObra({ ...obra, [e.target.name]: parseInt(e.target.value) })
-      : setObra({ ...obra, [e.target.name]: e.target.value });
-  };
 
   return (
     <div
@@ -62,28 +63,30 @@ export default function NewWork({ childToParent }) {
         open={open}
         onClose={handleClose}
         scroll="body"
+        background="gray"
         fullWidth={true}
         aria-labelledby="scroll-dialog-title"
         aria-describedby="scroll-dialog-description">
         <DialogTitle id="scroll-dialog-title">Criar nova obra</DialogTitle>
         <DialogContent>
-          {inputs.map((singleInput) => (
-            <ModalNewWorkBody
-              key={singleInput.name}
-              name={singleInput.name}
-              type={singleInput.type}
-              label={singleInput.label}
-              placeholder={singleInput.placeholder}
-              handleOnChange={handleChange}
-            />
-          ))}
+          <ObraAccordion
+            newObraHandle={newObraHandle}
+            disabledObra={obraDisabled}
+            handleObraDisable={handleObraDisable}
+            handleEtapaDisable={handleEtapaDisable}
+          />
+          <EtapaAccordion
+            disabledEtapa={etapaDisabled}
+            handleAtividadeDisable={handleAtividadeDisable}
+          />
+          <AtividadeAccordion
+            disabledAtividade={atividadeDisabled}
+            handleAtividadeDisable={handleAtividadeDisable}
+          />
         </DialogContent>
         <DialogActions>
-          <Button type="submit" onClick={handleSaveObra}>
-            Salvar
-          </Button>
-          <Button onClick={handleClose} color="error">
-            Cancelar
+          <Button type="submit" onClick={handleClose}>
+            Fechar
           </Button>
         </DialogActions>
       </Dialog>
