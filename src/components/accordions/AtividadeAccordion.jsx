@@ -9,47 +9,39 @@ import {
   MenuItem,
   Select,
   Typography,
-} from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ModalNewWorkBody from '../ModalNewWorkBody';
-import { useEffect, useState } from 'react';
+} from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ModalNewWorkBody from "../ModalNewWorkBody";
+import { useEffect, useState } from "react";
 
-import { inputsAtividade } from '../../utils/inputsList.js';
-import RestService from '../../services/RestService';
+import { inputsAtividade } from "../../utils/inputsList.js";
+import RestService from "../../services/RestService";
 
-const AtividadeAccordion = ({ disabledAtividade }) => {
-  const etapaId = JSON.parse(localStorage.getItem('etapaId'));
-
-  const [atividade, setAtividade] = useState({ etapa: etapaId });
+const AtividadeAccordion = ({ disabledAtividade, handleSetorDisable }) => {
+  const [atividade, setAtividade] = useState([]);
   const [expandAccordion, setExpandAcordion] = useState(false);
   const [etapas, setEtapas] = useState([]);
-  console.log('etapaId', etapaId);
+  const [etapaSelected, setEtapaSelected] = useState("");
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const getEtapas = await RestService.GET(`/etapa/show-all`);
-        console.log(getEtapas);
-        getEtapas.status === 'success' && setEtapas(getEtapas.data.etapas);
+        const getEtapas =
+          !disabledAtividade && (await RestService.GET(`/etapa/show-all`));
+        getEtapas.status === "success" && setEtapas(getEtapas.data.etapas);
       } catch (error) {
         console.log(error);
       }
     }
     fetchData();
-  }, [setEtapas]);
+  }, [setEtapas, disabledAtividade]);
+
+  console.log("etapas ", etapas);
 
   const handleSaveAtividade = () => {
     setExpandAcordion(false);
-    RestService.POST('/atividade/register', atividade)
-      .then((res) => {
-        localStorage.setItem(
-          'atividadeId',
-          JSON.stringify(res.data.atividade.id)
-        );
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    handleSetorDisable(false);
+    RestService.POST("/atividade/register", atividade);
   };
 
   const handleClickAccordion = () => {
@@ -58,14 +50,12 @@ const AtividadeAccordion = ({ disabledAtividade }) => {
 
   const handleChange = (e) => {
     e.preventDefault();
-    console.log(e.target.name);
-    e.target.type === 'number'
+    e.target.name === "etapa" && setEtapaSelected(e.target.value);
+    e.target.type === "number"
       ? setAtividade({
           ...atividade,
           [e.target.name]: parseInt(e.target.value),
         })
-      : e.target.name === undefined
-      ? setAtividade({ ...atividade, etapa: parseInt(e.target.value) })
       : setAtividade({
           ...atividade,
           [e.target.name]: e.target.value,
@@ -79,7 +69,8 @@ const AtividadeAccordion = ({ disabledAtividade }) => {
         onClick={handleClickAccordion}
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1a-content"
-        id="panel1a-header">
+        id="panel1a-header"
+      >
         <Typography>Atividade</Typography>
       </AccordionSummary>
       <AccordionDetails>
@@ -93,13 +84,16 @@ const AtividadeAccordion = ({ disabledAtividade }) => {
             handleOnChange={handleChange}
           />
         ))}
-        <FormControl sx={{ my: 2.5, width: '100%' }}>
+        <FormControl sx={{ my: 2.5, width: "100%" }}>
           <InputLabel id="demo-simple-select-helper-label">Etapa</InputLabel>
           <Select
+            value={etapaSelected}
             labelId="demo-simple-select-helper-label"
             id="demo-simple-select-helper"
             label="Etapa"
-            onChange={handleChange}>
+            name="etapa"
+            onChange={handleChange}
+          >
             {etapas &&
               etapas.map((etapa) => (
                 <MenuItem key={etapa.id} value={etapa.id}>

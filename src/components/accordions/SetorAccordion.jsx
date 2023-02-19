@@ -11,49 +11,49 @@ import ModalNewWorkBody from "../ModalNewWorkBody";
 import { useState } from "react";
 import RestService from "../../services/RestService";
 
-const EtapaAccordion = ({ disabledEtapa, handleAtividadeDisable }) => {
+const SetorAccordion = ({ disabledSetor, handleRuaDisable }) => {
   const obraId = JSON.parse(sessionStorage.getItem("obraId"));
-  const [etapa, setEtapa] = useState(obraId && { obra: obraId });
+  const [setor, setSetor] = useState(obraId && { obra: obraId });
   const [expandAccordion, setExpandAcordion] = useState(false);
   console.log("obraId", obraId);
 
-  const handleSaveEtapa = () => {
-    RestService.POST("/etapa/register", etapa);
+  const handleSaveSetor = () => {
     setExpandAcordion(false);
-    handleAtividadeDisable(false);
+    handleRuaDisable(false);
+    RestService.POST("/setor/register", setor);
   };
 
   const handleClickAccordion = () => {
-    !disabledEtapa && setExpandAcordion(!expandAccordion);
+    !disabledSetor && setExpandAcordion(!expandAccordion);
   };
 
   const handleChange = (e) => {
     e.preventDefault();
-    setEtapa({ ...etapa, nome: e.target.value });
+    setSetor({ ...setor, nome: e.target.value });
   };
-  console.log(etapa);
+  console.log(setor);
 
   return (
-    <Accordion disabled={disabledEtapa} expanded={expandAccordion}>
+    <Accordion disabled={disabledSetor} expanded={expandAccordion}>
       <AccordionSummary
         onClick={handleClickAccordion}
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1a-content"
         id="panel1a-header"
       >
-        <Typography>Etapa</Typography>
+        <Typography>Setor</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <ModalNewWorkBody
-          name={"Etapa"}
+          name={"Setor"}
           type={"text"}
-          label={"Etapa"}
+          label={"Setor"}
           placeholder={""}
           handleOnChange={handleChange}
         />
       </AccordionDetails>
       <AccordionActions>
-        <Button type="submit" onClick={handleSaveEtapa}>
+        <Button type="submit" onClick={handleSaveSetor}>
           Salvar
         </Button>
       </AccordionActions>
@@ -61,4 +61,4 @@ const EtapaAccordion = ({ disabledEtapa, handleAtividadeDisable }) => {
   );
 };
 
-export default EtapaAccordion;
+export default SetorAccordion;

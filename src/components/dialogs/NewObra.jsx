@@ -1,16 +1,19 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 import {
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-} from '@mui/material';
-import EtapaAccordion from './accordions/EtapaAccordion';
-import ObraAccordion from './accordions/ObraAccordion';
-import AtividadeAccordion from './accordions/AtividadeAccordion';
+} from "@mui/material";
+import EtapaAccordion from "../accordions/EtapaAccordion";
+import ObraAccordion from "../accordions/ObraAccordion";
+import AtividadeAccordion from "../accordions/AtividadeAccordion";
+import SetorAccordion from "../accordions/SetorAccordion";
+import RuaAccordion from "../accordions/RuaAccordion";
+import TrechoAccordion from "../accordions/TrechoAccordion";
 
-export default function NewWork({ newObraHandle }) {
+function NewObra({ newObraHandle }) {
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
@@ -38,6 +41,24 @@ export default function NewWork({ newObraHandle }) {
     setAtividadeDisabled(atividadeDisable);
   };
 
+  const [setorDisabled, setSetorDisabled] = useState(true);
+
+  const handleSetorDisable = (setorDisabled) => {
+    setSetorDisabled(setorDisabled);
+  };
+
+  const [ruaDisabled, setRuaDisabled] = useState(true);
+
+  const handleRuaDisable = (ruaDisabled) => {
+    setRuaDisabled(ruaDisabled);
+  };
+
+  const [trechoDisabled, setTrechoDisabled] = useState(true);
+
+  const handleTrechoDisable = (trechoDisabled) => {
+    setTrechoDisabled(trechoDisabled);
+  };
+
   const descriptionElementRef = useRef(null);
 
   useEffect(() => {
@@ -48,14 +69,8 @@ export default function NewWork({ newObraHandle }) {
       }
     }
   }, [open]);
-
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'flex-end',
-        marginBottom: '15px',
-      }}>
+    <>
       <Button variant="outlined" onClick={handleOpen}>
         Nova Obra
       </Button>
@@ -66,7 +81,8 @@ export default function NewWork({ newObraHandle }) {
         background="gray"
         fullWidth={true}
         aria-labelledby="scroll-dialog-title"
-        aria-describedby="scroll-dialog-description">
+        aria-describedby="scroll-dialog-description"
+      >
         <DialogTitle id="scroll-dialog-title">Criar nova obra</DialogTitle>
         <DialogContent>
           <ObraAccordion
@@ -81,8 +97,17 @@ export default function NewWork({ newObraHandle }) {
           />
           <AtividadeAccordion
             disabledAtividade={atividadeDisabled}
-            handleAtividadeDisable={handleAtividadeDisable}
+            handleSetorDisable={handleSetorDisable}
           />
+          <SetorAccordion
+            disabledSetor={setorDisabled}
+            handleRuaDisable={handleRuaDisable}
+          />
+          <RuaAccordion
+            disabledRua={ruaDisabled}
+            handleTrechoDisable={handleTrechoDisable}
+          />
+          <TrechoAccordion disabledTrecho={trechoDisabled} />
         </DialogContent>
         <DialogActions>
           <Button type="submit" onClick={handleClose}>
@@ -90,6 +115,8 @@ export default function NewWork({ newObraHandle }) {
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </>
   );
 }
+
+export default NewObra;

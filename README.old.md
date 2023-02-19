@@ -1,1 +1,0 @@
-# plannit-frontend

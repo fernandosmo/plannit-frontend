@@ -8,15 +8,15 @@ import {
   InputAdornment,
   Alert,
   Snackbar,
-} from '@mui/material';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { useNavigate } from 'react-router-dom';
-import { useContext, useEffect, useState } from 'react';
+} from "@mui/material";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { useNavigate } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
 
-import { AuthContext } from '../context/AuthContext.jsx';
-import RestService from '../services/RestService.js';
-import Logo from '../assets/logo2.png';
+import { AuthContext } from "../context/AuthContext.jsx";
+import RestService from "../services/RestService.js";
+import Logo from "../assets/logo.png";
 
 const Login = () => {
   const { setLoginData, signed, setSigned } = useContext(AuthContext);
@@ -25,20 +25,22 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    const data = new FormData(document.getElementById('form'));
+    const data = new FormData(document.getElementById("form"));
 
     const login = {
-      email: data.get('email'),
-      password: data.get('password'),
+      email: data.get("email"),
+      password: data.get("password"),
     };
 
     await RestService.POST(`/auth/login`, login)
       .then((res) => {
         console.log(res);
-        if (res.status === 'success') {
+        if (res.status === "success") {
           setSigned(true);
           setLoginData(res);
-          localStorage.setItem('loginData', JSON.stringify(res));
+          console.log(res);
+          sessionStorage.setItem("loginData", JSON.stringify(res));
+          sessionStorage.setItem("signed", true);
         } else {
           handleOpenAlert();
         }
@@ -51,7 +53,7 @@ const Login = () => {
   useEffect(() => {
     if (signed) {
       try {
-        navigate('/home');
+        navigate("/home");
       } catch (error) {
         console.log(error);
       }
@@ -75,7 +77,7 @@ const Login = () => {
   };
 
   const handleCloseAlert = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
 
@@ -84,17 +86,19 @@ const Login = () => {
 
   return (
     <div>
-      <Container maxWidth="xs">
+      <Container maxWidth="md">
         <Grid
           container
           spacing={2}
           direction="column"
           justifyContent="center"
-          style={{ minHeight: '100vh' }}>
+          style={{ minHeight: "100vh" }}
+        >
           <Paper elelvation={2} sx={{ padding: 5 }}>
             <Container
-              maxWidth="sm"
-              sx={{ mb: 5, display: 'flex', justifyContent: 'center' }}>
+              maxWidth="md"
+              sx={{ mb: 5, display: "flex", justifyContent: "center" }}
+            >
               <img src={Logo} alt="" />
             </Container>
             <form id="form" onSubmit={handleLogin}>
@@ -113,7 +117,7 @@ const Login = () => {
 
                 <Grid item>
                   <TextField
-                    type={values.showPass ? 'text' : 'password'}
+                    type={values.showPass ? "text" : "password"}
                     fullWidth
                     label="Senha"
                     name="password"
@@ -126,7 +130,8 @@ const Login = () => {
                           <IconButton
                             onClick={handlePassVisibilty}
                             aria-label="toggle password"
-                            edge="end">
+                            edge="end"
+                          >
                             {values.showPass ? (
                               <VisibilityOffIcon />
                             ) : (
@@ -141,11 +146,13 @@ const Login = () => {
                   <Snackbar
                     open={open}
                     autoHideDuration={6000}
-                    onClose={handleCloseAlert}>
+                    onClose={handleCloseAlert}
+                  >
                     <Alert
                       onClose={handleCloseAlert}
                       severity="error"
-                      sx={{ width: '100%' }}>
+                      sx={{ width: "100%" }}
+                    >
                       Usuário ou senha incorretos
                     </Alert>
                   </Snackbar>

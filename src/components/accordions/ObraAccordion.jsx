@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 import {
   Accordion,
   AccordionActions,
@@ -6,12 +6,12 @@ import {
   AccordionSummary,
   Button,
   Typography,
-} from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+} from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-import ModalNewWorkBody from '../ModalNewWorkBody';
-import { inputsObra } from '../../utils/inputsList.js';
-import RestService from '../../services/RestService';
+import ModalNewWorkBody from "../ModalNewWorkBody";
+import { inputsObra } from "../../utils/inputsList.js";
+import RestService from "../../services/RestService";
 
 const ObraAccordion = ({
   newObraHandle,
@@ -19,7 +19,7 @@ const ObraAccordion = ({
   handleObraDisable,
   handleEtapaDisable,
 }) => {
-  const userInfo = JSON.parse(localStorage.getItem('loginData'));
+  const userInfo = JSON.parse(sessionStorage.getItem("loginData"));
   console.log(userInfo);
   const [obra, setObra] = useState(userInfo && { user: userInfo.user.id });
 
@@ -35,9 +35,9 @@ const ObraAccordion = ({
     handleEtapaDisable(false);
     setExpandAcordion(false);
 
-    RestService.POST('/obra/register', obra)
+    RestService.POST("/obra/register", obra)
       .then((res) => {
-        localStorage.setItem('obraId', JSON.stringify(res.data.obra.id));
+        sessionStorage.setItem("obraId", JSON.stringify(res.data.obra.id));
       })
       .catch((e) => {
         console.log(e);
@@ -48,7 +48,7 @@ const ObraAccordion = ({
 
   const handleChange = (e) => {
     e.preventDefault();
-    e.target.name === 'Prazo_Exec'
+    e.target.name === "Prazo_Exec"
       ? setObra({ ...obra, [e.target.name]: parseInt(e.target.value) })
       : setObra({ ...obra, [e.target.name]: e.target.value });
   };
@@ -59,7 +59,8 @@ const ObraAccordion = ({
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1a-content"
         id="panel1a-header"
-        onClick={handleClickAccordion}>
+        onClick={handleClickAccordion}
+      >
         <Typography>Obra</Typography>
       </AccordionSummary>
       <AccordionDetails>
