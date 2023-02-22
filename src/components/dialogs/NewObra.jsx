@@ -6,12 +6,12 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
-import EtapaAccordion from "../accordions/EtapaAccordion";
-import ObraAccordion from "../accordions/ObraAccordion";
-import AtividadeAccordion from "../accordions/AtividadeAccordion";
-import SetorAccordion from "../accordions/SetorAccordion";
-import RuaAccordion from "../accordions/RuaAccordion";
-import TrechoAccordion from "../accordions/TrechoAccordion";
+import EtapaAccordion from "../obra-accordions/EtapaAccordion";
+import ObraAccordion from "../obra-accordions/ObraAccordion";
+import AtividadeAccordion from "../obra-accordions/AtividadeAccordion";
+import SetorAccordion from "../obra-accordions/SetorAccordion";
+import RuaAccordion from "../obra-accordions/RuaAccordion";
+import TrechoAccordion from "../obra-accordions/TrechoAccordion";
 
 function NewObra({ newObraHandle }) {
   const [open, setOpen] = useState(false);
@@ -21,6 +21,12 @@ function NewObra({ newObraHandle }) {
   };
   const handleClose = () => {
     setOpen(false);
+    setObraDisabled(false);
+    setEtapaDisabled(true);
+    setAtividadeDisabled(true);
+    setSetorDisabled(true);
+    setRuaDisabled(true);
+    setTrechoDisabled(true);
   };
 
   const [obraDisabled, setObraDisabled] = useState(false);

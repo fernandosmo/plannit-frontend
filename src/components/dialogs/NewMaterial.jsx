@@ -6,6 +6,8 @@ import {
   DialogTitle,
 } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
+import GrupoMaterialAccordion from "../material-accordion/GrupoMaterialAccordion";
+import MaterialAccordion from "../material-accordion/MaterialAccordion";
 
 const NewMaterial = () => {
   const [open, setOpen] = useState(false);
@@ -45,7 +47,10 @@ const NewMaterial = () => {
         <DialogTitle id="scroll-dialog-title">
           Cadastro de materiais
         </DialogTitle>
-        <DialogContent>nada por enquanto</DialogContent>
+        <DialogContent>
+          <GrupoMaterialAccordion />
+          <MaterialAccordion />
+        </DialogContent>
         <DialogActions>
           <Button type="submit" onClick={handleClose}>
             Fechar

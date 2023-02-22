@@ -11,7 +11,7 @@ export default function BodyMenu({ newObraHandle }) {
       }}
     >
       <NewMaterial />
-      <NewObra />
+      <NewObra newObraHandle={newObraHandle} />
     </div>
   );
 }
